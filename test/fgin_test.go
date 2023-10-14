@@ -11,7 +11,7 @@ import (
 	"git.vox666.top/vox/fgin"
 )
 
-const testUrl = "http://127.0.0.1:9999"
+const testUrl = "http://127.0.0.1:9998"
 
 type testBody []byte
 
@@ -68,7 +68,7 @@ func TestHTTPBasic(t *testing.T) {
 			ctx.Data(200, []byte("hello world by /v2/hello get"))
 		})
 
-		panic(r.Run(":9999"))
+		panic(r.Run(":9998"))
 	}()
 
 	time.Sleep(2 * time.Second)
