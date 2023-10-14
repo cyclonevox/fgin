@@ -25,7 +25,6 @@ func TestHTTPBasic(t *testing.T) {
 		r := fgin.New()
 		r.GET("/", func(ctx *fgin.Context) {
 			fmt.Println(ctx.Method(), ctx.Path())
-			ctx.Data(200, []byte("hello world by / get"))
 		})
 		r.GET("/hello", func(ctx *fgin.Context) {
 			fmt.Println(ctx.Method(), ctx.Path())
