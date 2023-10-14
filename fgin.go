@@ -40,7 +40,7 @@ func (e *Engine) Run(addr string) error {
 		method := util.B2s(ctx.Method())
 		node, params := e.router.findRoute(method, util.B2s(ctx.Path()))
 		// todo:buffer拼凑减少小对象
-		key := util.B2s(ctx.Method()) + "-" + node.Pattern()
+		key := method + "-" + node.Pattern()
 		c.Params = params
 
 		if handler, ok := e.router.handlers[key]; ok {

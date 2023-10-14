@@ -1,5 +1,7 @@
 package fgin
 
+import "strings"
+
 type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc
@@ -8,6 +10,10 @@ type RouterGroup struct {
 }
 
 func (g *RouterGroup) Group(prefix string) *RouterGroup {
+	if !strings.HasPrefix(prefix, "/") {
+		prefix = "/" + prefix
+	}
+
 	newGroup := &RouterGroup{
 		prefix: g.prefix + prefix,
 		parent: g.parent,
