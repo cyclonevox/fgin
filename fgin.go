@@ -8,15 +8,15 @@ import (
 type HandlerFunc func(ctx *Context)
 
 type Engine struct {
-	*Group
+	*RouterGroup
 	router router
-	groups []*Group
+	groups []*RouterGroup
 }
 
 func New() *Engine {
 	e := &Engine{router: newRouter()}
-	e.Group = &Group{engine: e}
-	e.groups = []*Group{e.Group}
+	e.RouterGroup = &RouterGroup{engine: e}
+	e.groups = []*RouterGroup{e.RouterGroup}
 
 	return e
 }

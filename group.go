@@ -1,14 +1,14 @@
 package fgin
 
-type Group struct {
+type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc
-	parent      *Group
+	parent      *RouterGroup
 	engine      *Engine
 }
 
-func (g *Group) Group(prefix string) *Group {
-	newGroup := &Group{
+func (g *RouterGroup) Group(prefix string) *RouterGroup {
+	newGroup := &RouterGroup{
 		prefix: g.prefix + prefix,
 		parent: g.parent,
 		engine: g.engine,
@@ -18,20 +18,20 @@ func (g *Group) Group(prefix string) *Group {
 	return newGroup
 }
 
-func (g *Group) addRoute(method, comp string, handler HandlerFunc) {
+func (g *RouterGroup) addRoute(method, comp string, handler HandlerFunc) {
 	pattern := g.prefix + comp
 	g.engine.router.addRoute(method, pattern, handler)
 }
 
-func (g *Group) GET(pattern string, handlerFunc HandlerFunc) {
+func (g *RouterGroup) GET(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("GET", pattern, handlerFunc)
 }
-func (g *Group) POST(pattern string, handlerFunc HandlerFunc) {
+func (g *RouterGroup) POST(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("POST", pattern, handlerFunc)
 }
-func (g *Group) UPDATE(pattern string, handlerFunc HandlerFunc) {
+func (g *RouterGroup) UPDATE(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("UPDATE", pattern, handlerFunc)
 }
-func (g *Group) DELETE(pattern string, handlerFunc HandlerFunc) {
+func (g *RouterGroup) DELETE(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("DELETE", pattern, handlerFunc)
 }
