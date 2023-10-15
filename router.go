@@ -72,3 +72,19 @@ func parsePattern(pattern string) []string {
 
 	return parts
 }
+
+type Params map[string]string
+
+// Get returns the value of the first Param which key matches the given name and a boolean true.
+// If no matching Param is found, an empty string is returned and a boolean false .
+func (ps Params) Get(name string) (value string, ok bool) {
+	value, ok = ps[name]
+	return
+}
+
+// ByName returns the value of the first Param which key matches the given name.
+// If no matching Param is found, an empty string is returned.
+func (ps Params) ByName(name string) (va string) {
+	va, _ = ps.Get(name)
+	return
+}

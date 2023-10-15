@@ -7,28 +7,33 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+type Request struct {
+	RequestURI []byte
+}
+
 type Context struct {
-	ctx    *fasthttp.RequestCtx
-	Params map[string]string
+	ctx *fasthttp.RequestCtx
+
+	// todo 切换引擎后可以不再使用fasthttp的Context，减少开销。
+	//  	此处的目的是需要像gin使用context字段达成效果
+	//      使用Request对象的指针来达到效果
+	Method []byte
+	Request
+
+	// todo gin使用了slice进一步减少消耗，后续可以修改
+	Params
 }
 
 func newContext(ctx *fasthttp.RequestCtx) *Context {
 	return &Context{
-		ctx: ctx,
+		ctx:     ctx,
+		Method:  ctx.Method(),
+		Request: Request{RequestURI: ctx.RequestURI()},
 	}
 }
 
-func (c *Context) Method() string {
-	return util.B2s(c.ctx.Method())
-}
-
-func (c *Context) Path() string {
-	return util.B2s(c.ctx.Path())
-}
-
 func (c *Context) Param(key string) string {
-	value, _ := c.Params[key]
-	return value
+	return c.Params.ByName(key)
 }
 
 func (c *Context) PostForm(key string) string {

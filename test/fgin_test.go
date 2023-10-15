@@ -20,26 +20,26 @@ func TestHTTPBasic(t *testing.T) {
 		// 	fmt.Println(ctx.Method(), ctx.Path())
 		// })
 		r.GET("/hello", func(ctx *fgin.Context) {
-			fmt.Println(ctx.Method(), ctx.Path())
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
 			ctx.Data(200, "", []byte("hello world by /hello get"))
 		})
 
 		v1 := r.Group("/v1")
 		v1.GET("/", func(ctx *fgin.Context) {
-			fmt.Println(ctx.Method(), ctx.Path())
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
 		})
 		v1.GET("/hello", func(ctx *fgin.Context) {
-			fmt.Println(ctx.Method(), ctx.Path())
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
 			ctx.Data(200, "", []byte("hello world by /hello get"))
 		})
 
 		v2 := r.Group("/v2")
 		v2.GET("/", func(ctx *fgin.Context) {
-			fmt.Println(ctx.Method(), ctx.Path())
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
 			ctx.Data(200, "", []byte("hello world by /v2 get"))
 		})
 		v2.GET("/hello", func(ctx *fgin.Context) {
-			fmt.Println(ctx.Method(), ctx.Path())
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
 			ctx.Data(200, "", []byte("hello world by /v2/hello get"))
 		})
 
