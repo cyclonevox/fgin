@@ -23,19 +23,6 @@ func New() *Engine {
 	return e
 }
 
-// func (e *Engine) GET(pattern string, handlerFunc HandlerFunc) {
-// 	e.router.addRoute("GET", pattern, handlerFunc)
-// }
-// func (e *Engine) POST(pattern string, handlerFunc HandlerFunc) {
-// 	e.router.addRoute("POST", pattern, handlerFunc)
-// }
-// func (e *Engine) UPDATE(pattern string, handlerFunc HandlerFunc) {
-// 	e.router.addRoute("UPDATE", pattern, handlerFunc)
-// }
-// func (e *Engine) DELETE(pattern string, handlerFunc HandlerFunc) {
-// 	e.router.addRoute("DELETE", pattern, handlerFunc)
-// }
-
 func (e *Engine) Run(addr string) error {
 	handlers := func(ctx *fasthttp.RequestCtx) {
 		c := newContext(ctx)
@@ -44,7 +31,7 @@ func (e *Engine) Run(addr string) error {
 		node, params := e.router.findRoute(method, util.B2s(ctx.Path()))
 		// todo:buffer拼凑减少小对象
 		if node == nil {
-			c.Data(fasthttp.StatusNotFound, []byte("not found"))
+			c.Data(fasthttp.StatusNotFound, "", []byte("not found"))
 
 			return
 		}
@@ -55,7 +42,7 @@ func (e *Engine) Run(addr string) error {
 		if handler, ok := e.router.handlers[key]; ok {
 			handler(c)
 		} else {
-			c.Data(fasthttp.StatusNotFound, []byte("not found"))
+			c.Data(fasthttp.StatusNotFound, "", []byte("not found"))
 		}
 	}
 

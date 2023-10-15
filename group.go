@@ -29,8 +29,8 @@ func (g *RouterGroup) GET(pattern string, handlerFunc HandlerFunc) {
 func (g *RouterGroup) POST(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("POST", pattern, handlerFunc)
 }
-func (g *RouterGroup) UPDATE(pattern string, handlerFunc HandlerFunc) {
-	g.addRoute("UPDATE", pattern, handlerFunc)
+func (g *RouterGroup) PUT(pattern string, handlerFunc HandlerFunc) {
+	g.addRoute("PUT", pattern, handlerFunc)
 }
 func (g *RouterGroup) DELETE(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("DELETE", pattern, handlerFunc)

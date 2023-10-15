@@ -57,7 +57,7 @@ func (c *Context) JSON(code int, obj interface{}) {
 	}
 }
 
-func (c *Context) Data(code int, data []byte) {
+func (c *Context) Data(code int, contentType string, data []byte) {
 	c.Status(code)
 	c.ctx.SetBody(data)
 }
