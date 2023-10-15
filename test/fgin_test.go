@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 	"time"
@@ -56,7 +56,7 @@ func TestHTTPBasic(t *testing.T) {
 			return
 		}
 		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		fmt.Println(string(body))
 	})
 
@@ -68,7 +68,7 @@ func TestHTTPBasic(t *testing.T) {
 			return
 		}
 		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		fmt.Println(string(body))
 	})
 
@@ -80,7 +80,7 @@ func TestHTTPBasic(t *testing.T) {
 			return
 		}
 		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		fmt.Println(string(body))
 	})
 
@@ -92,7 +92,7 @@ func TestHTTPBasic(t *testing.T) {
 			return
 		}
 		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		fmt.Println(string(body))
 	})
 }
