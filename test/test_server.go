@@ -2,18 +2,15 @@ package test
 
 import (
 	"fmt"
-	"io"
-	"net/http"
-	"testing"
 	"time"
 
 	"git.vox666.top/vox/fgin"
 )
 
 const testUrl = "http://127.0.0.1:9998"
+const testAddr = ":9998"
 
-func TestHTTPBasic(t *testing.T) {
-
+func setUpTestServer(addr ...string) {
 	go func() {
 		r := fgin.New()
 		// r.GET("/", func(ctx *fgin.Context) {
@@ -43,56 +40,23 @@ func TestHTTPBasic(t *testing.T) {
 			ctx.Data(200, "", []byte("hello world by /v2/hello get"))
 		})
 
-		panic(r.Run(":9998"))
+		v3 := r.Group("/v3").Use(fgin.Logger(), fgin.Recovery())
+		v3.GET("/hello", func(ctx *fgin.Context) {
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
+			ctx.Data(200, "", []byte("hello world by /v3/hello get"))
+		})
+		v3.GET("/panic", func(ctx *fgin.Context) {
+			fmt.Println(ctx.Method, ctx.Request.RequestURI)
+			var a []string
+			ctx.Data(200, "", []byte("hello world by /v3/hello get"+a[0]))
+		})
+
+		if len(addr) > 0 {
+			panic(r.Run(addr[0]))
+		} else {
+			panic(r.Run(testAddr))
+		}
 	}()
 
 	time.Sleep(2 * time.Second)
-
-	t.Run("get1", func(t *testing.T) {
-
-		resp, err := http.Get(testUrl)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(body))
-	})
-
-	t.Run("get2", func(t *testing.T) {
-
-		resp, err := http.Get(testUrl + "/hello")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(body))
-	})
-
-	t.Run("get3", func(t *testing.T) {
-
-		resp, err := http.Get(testUrl + "/v2")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(body))
-	})
-
-	t.Run("get4", func(t *testing.T) {
-
-		resp, err := http.Get(testUrl + "/v1/hello")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(body))
-	})
 }

@@ -17,18 +17,32 @@ type Context struct {
 	// todo 切换引擎后可以不再使用fasthttp的Context，减少开销。
 	//  	此处的目的是需要像gin使用context字段达成效果
 	//      使用Request对象的指针来达到效果
-	Method []byte
+	Method     string
+	Path       string
+	StatusCode int
 	Request
-
 	// todo gin使用了slice进一步减少消耗，后续可以修改
 	Params
+
+	handlers []HandlerFunc
+	index    int
 }
 
 func newContext(ctx *fasthttp.RequestCtx) *Context {
 	return &Context{
 		ctx:     ctx,
-		Method:  ctx.Method(),
+		Method:  util.B2s(ctx.Method()),
+		Path:    util.B2s(ctx.Path()),
 		Request: Request{RequestURI: ctx.RequestURI()},
+		index:   -1,
+	}
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handlers)
+	for ; c.index < s; c.index++ {
+		c.handlers[c.index](c)
 	}
 }
 
@@ -45,6 +59,7 @@ func (c *Context) Query() string {
 }
 
 func (c *Context) Status(code int) {
+	c.StatusCode = code
 	c.ctx.SetStatusCode(code)
 }
 

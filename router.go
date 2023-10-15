@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"git.vox666.top/vox/fgin/internal/trie"
+	"github.com/valyala/fasthttp"
 )
 
 type router struct {
@@ -26,6 +27,7 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	}
 	r.roots[method].Insert(pattern, parts, 0)
 
+	// todo: chain handler to node
 	key := method + "-" + pattern
 	r.handlers[key] = handler
 }
@@ -54,6 +56,22 @@ func (r *router) findRoute(method string, path string) (*trie.Node, map[string]s
 	}
 
 	return nil, nil
+}
+
+func (r *router) handle(c *Context) {
+	node, params := r.findRoute(c.Method, c.Path)
+
+	// 找到该节点
+	if node != nil {
+		c.Params = params
+		// todo:buffer拼凑减少小对象
+		key := c.Method + "-" + node.Pattern()
+		c.handlers = append(c.handlers, r.handlers[key])
+	} else {
+		c.Data(fasthttp.StatusNotFound, "", []byte("not found"))
+	}
+
+	c.Next()
 }
 
 func parsePattern(pattern string) []string {

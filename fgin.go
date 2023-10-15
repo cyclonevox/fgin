@@ -1,9 +1,8 @@
 package fgin
 
 import (
-	"fmt"
+	"strings"
 
-	"git.vox666.top/vox/fgin/internal/util"
 	"github.com/valyala/fasthttp"
 )
 
@@ -23,27 +22,28 @@ func New() *Engine {
 	return e
 }
 
+func Default() *Engine {
+	e := &Engine{router: newRouter()}
+	e.RouterGroup = &RouterGroup{engine: e}
+	e.Use(Logger(), Recovery())
+	e.groups = []*RouterGroup{e.RouterGroup}
+
+	return e
+}
+
 func (e *Engine) Run(addr string) error {
 	handlers := func(ctx *fasthttp.RequestCtx) {
 		c := newContext(ctx)
-		method := util.B2s(ctx.Method())
-		fmt.Println(string(ctx.Path()))
-		node, params := e.router.findRoute(method, util.B2s(ctx.Path()))
-		// todo:buffer拼凑减少小对象
-		if node == nil {
-			c.Data(fasthttp.StatusNotFound, "", []byte("not found"))
 
-			return
+		var middlewares []HandlerFunc
+		for _, group := range e.groups {
+			if strings.HasPrefix(c.Path, group.prefix) {
+				middlewares = append(middlewares, group.middlewares...)
+			}
 		}
+		c.handlers = middlewares
 
-		key := method + "-" + node.Pattern()
-		c.Params = params
-
-		if handler, ok := e.router.handlers[key]; ok {
-			handler(c)
-		} else {
-			c.Data(fasthttp.StatusNotFound, "", []byte("not found"))
-		}
+		e.router.handle(c)
 	}
 
 	return fasthttp.ListenAndServe(addr, handlers)

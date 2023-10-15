@@ -23,6 +23,12 @@ func (g *RouterGroup) addRoute(method, comp string, handler HandlerFunc) {
 	g.engine.router.addRoute(method, pattern, handler)
 }
 
+func (g *RouterGroup) Use(middlewares ...HandlerFunc) *RouterGroup {
+	g.middlewares = append(g.middlewares, middlewares...)
+
+	return g
+}
+
 func (g *RouterGroup) GET(pattern string, handlerFunc HandlerFunc) {
 	g.addRoute("GET", pattern, handlerFunc)
 }
