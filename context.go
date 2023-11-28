@@ -3,7 +3,7 @@ package fgin
 import (
 	"encoding/json"
 
-	"git.vox666.top/vox/fgin/internal/util"
+	"github.com/cyclonevox/fgin/internal/util"
 	"github.com/valyala/fasthttp"
 )
 

@@ -3,7 +3,7 @@ package fgin
 import (
 	"strings"
 
-	"git.vox666.top/vox/fgin/internal/trie"
+	"github.com/cyclonevox/fgin/internal/trie"
 	"github.com/valyala/fasthttp"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.vox666.top/vox/fgin"
+	"github.com/cyclonevox/fgin"
 )
 
 const testUrl = "http://127.0.0.1:9998"
